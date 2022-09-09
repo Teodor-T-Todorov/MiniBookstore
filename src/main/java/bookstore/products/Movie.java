@@ -10,7 +10,7 @@ public class Movie extends Product{
 
     @Override
     public String getProductInfo() {
-        return "Album: " + getName() + "\n" +
+        return "Movie: " + getName() + "\n" +
                 "Directed by: " + getDirector() + "\n" +
                 "Price: " + getPrice() + "\n" +
                 "Available copies: " + getCopies() + "\n";

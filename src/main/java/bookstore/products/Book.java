@@ -12,7 +12,7 @@ public class Book extends  Product{
 
     @Override
     public String getProductInfo() {
-        return "Album: " + getName() + "\n" +
+        return "Book: " + getName() + "\n" +
                 "Written by: " + getAuthor() + "\n" +
                 "Pages: " + getPages() + "\n" +
                 "Price: " + getPrice() + "\n" +
