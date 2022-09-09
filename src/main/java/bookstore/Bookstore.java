@@ -93,4 +93,19 @@ public class Bookstore {
             log.warn("Invalid discount number");
         }
     }
+
+    public void increasePrice(Product product, double price) {
+        if (price <= 0) {
+            throw new IllegalArgumentException("Can't increase price with negative or zero value");
+        }
+
+        if (productList.contains(product)) {
+            product.setPrice(product.getPrice() + price);
+            log.info("Price for [{}, {}] got increased to {}",
+                    product.getName(), product.getClass().getSimpleName(), product.getPrice());
+        } else {
+            log.info("Can't increase price for [{}, {}] since it's not included in the store",
+                    product.getName(), product.getClass().getSimpleName());
+        }
+    }
 }
