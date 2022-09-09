@@ -7,9 +7,12 @@ abstract public class Product {
     private String name;
     private double price;
     private int copies;
-    private final Logger log = LoggerFactory.getLogger(Product.class);
+    private static final Logger log = LoggerFactory.getLogger(Product.class);
 
     public Product(String name, double price, int copies) {
+        if (price < 0 || copies < 0) {
+            throw new IllegalArgumentException("Price or copies can't be negative");
+        }
         this.name = name;
         this.price = price;
         this.copies = copies;
@@ -17,22 +20,32 @@ abstract public class Product {
 
     abstract public String getProductInfo();
 
-    public void sellCopies(int copiesToSell) {
-        if (copies >= copiesToSell) {
-            copies -= copiesToSell;
-            log.info("Sold {} copies of {}", copiesToSell, name);
-        } else {
-            log.info("""
+    public void removeCopies(int copiesToRemove) {
+        if (copiesToRemove > 0) {
+            if (copies >= copiesToRemove) {
+                copies -= copiesToRemove;
+                log.info("Sold {} copies of {}", copiesToRemove, getName());
+            } else {
+                log.info("""
                     Not enough copies in stock.\s
                     Current copies {}\s
-                    Copies wanted to be sold {}""", copies,copiesToSell);
+                    Copies wanted to be sold {}""", copies,copiesToRemove);
+            }
+        } else {
+            throw new IllegalArgumentException("Can't remove negative amount of copies");
         }
+
     }
 
-    public void orderCopies(int copiesToOrder) {
-        copies += copiesToOrder;
-        log.info("{} copies has been added for a total of {} for product: {}",
-                copiesToOrder, copies, getName());
+    public void getMoreCopies(int copiesToOrder) {
+        if (copiesToOrder > 0) {
+            copies += copiesToOrder;
+            log.info("{} copies has been added for a total of {} for product: {}",
+                    copiesToOrder, copies, getName());
+        } else {
+            throw new IllegalArgumentException("Can't get negative amount of copies");
+        }
+
     }
 
     public String getName() {
@@ -48,7 +61,11 @@ abstract public class Product {
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        if (price >= 0) {
+            this.price = price;
+        } else {
+            throw new IllegalArgumentException("Price can't be negative");
+        }
     }
 
     public int getCopies() {
@@ -56,6 +73,10 @@ abstract public class Product {
     }
 
     public void setCopies(int copies) {
-        this.copies = copies;
+        if (copies >= 0) {
+            this.copies = copies;
+        } else {
+            throw new IllegalArgumentException("Price can't be negative");
+        }
     }
 }
