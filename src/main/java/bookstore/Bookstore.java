@@ -42,7 +42,7 @@ public class Bookstore {
 
     public void sellProduct(Product product) {
         if (productList.contains(product)) {
-            product.sellCopies(1);
+            product.removeCopies(1);
         } else {
             log.info("[{}, {}] is not currently in stock",
                     product.getName(), product.getClass().getSimpleName());
@@ -50,8 +50,12 @@ public class Bookstore {
     }
 
     public void sellProduct(Product product, int copies) {
+        if (copies <= 0) {
+            throw new IllegalArgumentException("Can't sell negative or zero amount of copies");
+        }
+
         if (productList.contains(product)) {
-            product.sellCopies(copies);
+            product.removeCopies(copies);
         } else {
             log.info("[{}, {}] is not currently in stock",
                     product.getName(), product.getClass().getSimpleName());
@@ -59,8 +63,12 @@ public class Bookstore {
     }
 
     public void resupplyProduct(Product product, int copies) {
+        if (copies <= 0) {
+            throw new IllegalArgumentException("Can't resupply negative or zero amount of copies");
+        }
+
         if (productList.contains(product)) {
-            product.orderCopies(copies);
+            product.getMoreCopies(copies);
         } else {
             log.info("[{}, {}] is not currently in stock",
                     product.getName(), product.getClass().getSimpleName());
