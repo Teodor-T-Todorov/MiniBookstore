@@ -3,7 +3,7 @@ package bookstore.products;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract public class Product {
+abstract public class Product implements Comparable<Product>{
     private String name;
     private double price;
     private int copies;
@@ -21,30 +21,29 @@ abstract public class Product {
     abstract public String getProductInfo();
 
     public void removeCopies(int copiesToRemove) {
-        if (copiesToRemove > 0) {
-            if (copies >= copiesToRemove) {
-                copies -= copiesToRemove;
-                log.info("Sold {} copies of {}", copiesToRemove, getName());
-            } else {
-                log.info("""
+        if (copiesToRemove <= 0) {
+            throw new IllegalArgumentException("Can't remove negative or zero amount of copies");
+        }
+
+        if (copies >= copiesToRemove) {
+            copies -= copiesToRemove;
+            log.info("Sold {} copies of {}", copiesToRemove, getName());
+        } else {
+            log.info("""
                     Not enough copies in stock.\s
                     Current copies {}\s
                     Copies wanted to be sold {}""", copies,copiesToRemove);
-            }
-        } else {
-            throw new IllegalArgumentException("Can't remove negative amount of copies");
         }
 
     }
 
     public void getMoreCopies(int copiesToOrder) {
-        if (copiesToOrder > 0) {
-            copies += copiesToOrder;
-            log.info("{} copies has been added for a total of {} for product: {}",
-                    copiesToOrder, copies, getName());
-        } else {
-            throw new IllegalArgumentException("Can't get negative amount of copies");
+        if (copiesToOrder <= 0) {
+            throw new IllegalArgumentException("Can't get negative or zero amount of copies");
         }
+        copies += copiesToOrder;
+        log.info("{} copies has been added for a total of {} for product: {}",
+                copiesToOrder, copies, getName());
 
     }
 
@@ -61,11 +60,10 @@ abstract public class Product {
     }
 
     public void setPrice(double price) {
-        if (price >= 0) {
-            this.price = price;
-        } else {
+        if (price < 0) {
             throw new IllegalArgumentException("Price can't be negative");
         }
+        this.price = price;
     }
 
     public int getCopies() {
@@ -73,10 +71,18 @@ abstract public class Product {
     }
 
     public void setCopies(int copies) {
-        if (copies >= 0) {
-            this.copies = copies;
-        } else {
+        if (copies < 0) {
             throw new IllegalArgumentException("Price can't be negative");
+        }
+        this.copies = copies;
+    }
+
+    @Override
+    public int compareTo(Product product) {
+        if (getPrice() > product.getPrice()) {
+            return 1;
+        } else {
+            return -1;
         }
     }
 }
