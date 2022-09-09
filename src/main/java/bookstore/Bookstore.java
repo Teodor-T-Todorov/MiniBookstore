@@ -16,6 +16,10 @@ public class Bookstore {
         this.productList = productList;
     }
 
+    public boolean contains(Product product) {
+        return productList.contains(product);
+    }
+
     public void addProductToStore(Product product) {
         if (!productList.contains(product)) {
             productList.add(product);
