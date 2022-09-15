@@ -11,13 +11,13 @@ public class Bookstore {
     private List<Product> products;
     private final Logger log = LoggerFactory.getLogger(Bookstore.class);
 
-    public Bookstore(String name, List<Product> productList) {
+    public Bookstore(String name, List<Product> products) {
         this.name = name;
-        this.products = productList;
+        this.products = products;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -25,7 +25,7 @@ public class Bookstore {
     }
 
     public List<Product> getProducts() {
-        return products;
+        return this.products;
     }
 
     public void setProducts(List<Product> productList) {

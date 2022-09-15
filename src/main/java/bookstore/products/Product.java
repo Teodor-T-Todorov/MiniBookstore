@@ -9,7 +9,7 @@ abstract public class Product implements Comparable<Product>{
     private int copies;
     private static final Logger log = LoggerFactory.getLogger(Product.class);
 
-    public Product(String name, double price, int copies) {
+    protected Product(String name, double price, int copies) {
         if (price < 0 || copies < 0) {
             throw new IllegalArgumentException("Price or copies can't be negative");
         }
@@ -19,7 +19,7 @@ abstract public class Product implements Comparable<Product>{
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -27,7 +27,7 @@ abstract public class Product implements Comparable<Product>{
     }
 
     public double getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setPrice(double price) {
@@ -38,7 +38,7 @@ abstract public class Product implements Comparable<Product>{
     }
 
     public int getCopies() {
-        return copies;
+        return this.copies;
     }
 
     public void setCopies(int copies) {
@@ -83,8 +83,10 @@ abstract public class Product implements Comparable<Product>{
     public int compareTo(Product product) {
         if (getPrice() > product.getPrice()) {
             return 1;
-        } else {
+        } else if (getPrice() < product.getPrice()){
             return -1;
+        } else {
+            return 0;
         }
     }
 }

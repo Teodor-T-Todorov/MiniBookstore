@@ -11,7 +11,7 @@ public class Book extends  Product{
     }
 
     public String getAuthor() {
-        return author;
+        return this.author;
     }
 
     public void setAuthor(String author) {
@@ -19,7 +19,7 @@ public class Book extends  Product{
     }
 
     public int getPages() {
-        return pages;
+        return this.pages;
     }
 
     public void setPages(int pages) {

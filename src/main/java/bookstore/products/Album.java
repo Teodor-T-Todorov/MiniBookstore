@@ -9,7 +9,7 @@ public class Album extends Product{
     }
 
     public String getArtist() {
-        return artist;
+        return this.artist;
     }
 
     public void setArtist(String artist) {

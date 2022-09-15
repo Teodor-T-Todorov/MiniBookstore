@@ -9,7 +9,7 @@ public class Movie extends Product{
     }
 
     public String getDirector() {
-        return director;
+        return this.director;
     }
 
     public void setDirector(String director) {
