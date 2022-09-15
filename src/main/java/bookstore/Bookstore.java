@@ -8,21 +8,37 @@ import java.util.List;
 
 public class Bookstore {
     private String name;
-    private List<Product> productList;
+    private List<Product> products;
     private final Logger log = LoggerFactory.getLogger(Bookstore.class);
 
     public Bookstore(String name, List<Product> productList) {
         this.name = name;
-        this.productList = productList;
+        this.products = productList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> productList) {
+        this.products = productList;
     }
 
     public boolean contains(Product product) {
-        return productList.contains(product);
+        return products.contains(product);
     }
 
     public void addProductToStore(Product product) {
-        if (!productList.contains(product)) {
-            productList.add(product);
+        if (!products.contains(product)) {
+            products.add(product);
             log.info("{} copies of [{}, {}] got added to the bookstore",
                     product.getCopies(),
                     product.getName(),
@@ -34,8 +50,8 @@ public class Bookstore {
     }
 
     public void removeProductFromStore(Product product) {
-        if (productList.contains(product)) {
-            productList.remove(product);
+        if (products.contains(product)) {
+            products.remove(product);
             log.info("[{}, {}] got removed to the bookstore",
                     product.getName(), product.getClass().getSimpleName());
         } else {
@@ -45,7 +61,7 @@ public class Bookstore {
     }
 
     public void sellProduct(Product product) {
-        if (productList.contains(product)) {
+        if (products.contains(product)) {
             product.removeCopies(1);
         } else {
             log.info("[{}, {}] is not currently in stock",
@@ -58,7 +74,7 @@ public class Bookstore {
             throw new IllegalArgumentException("Can't sell negative or zero amount of copies");
         }
 
-        if (productList.contains(product)) {
+        if (products.contains(product)) {
             product.removeCopies(copies);
         } else {
             log.info("[{}, {}] is not currently in stock",
@@ -71,7 +87,7 @@ public class Bookstore {
             throw new IllegalArgumentException("Can't resupply negative or zero amount of copies");
         }
 
-        if (productList.contains(product)) {
+        if (products.contains(product)) {
             product.getMoreCopies(copies);
         } else {
             log.info("[{}, {}] is not currently in stock",
@@ -81,7 +97,7 @@ public class Bookstore {
 
     public void makeDiscount(Product product, double discount) {
         if (discount > 0 && discount < 100) {
-            if (productList.contains(product)) {
+            if (products.contains(product)) {
                 product.setPrice(product.getPrice() - product.getPrice()*(discount/100));
                 log.info("Discount price for [{}, {}] is {}$",
                         product.getName(), product.getClass().getSimpleName(), product.getPrice());
@@ -99,7 +115,7 @@ public class Bookstore {
             throw new IllegalArgumentException("Can't increase price with negative or zero value");
         }
 
-        if (productList.contains(product)) {
+        if (products.contains(product)) {
             product.setPrice(product.getPrice() + price);
             log.info("Price for [{}, {}] got increased to {}",
                     product.getName(), product.getClass().getSimpleName(), product.getPrice());

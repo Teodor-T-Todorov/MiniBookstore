@@ -10,15 +10,6 @@ public class Book extends  Product{
         this.pages = pages;
     }
 
-    @Override
-    public String getProductInfo() {
-        return "Book: " + getName() + "\n" +
-                "Written by: " + getAuthor() + "\n" +
-                "Pages: " + getPages() + "\n" +
-                "Price: " + getPrice() + "\n" +
-                "Available copies: " + getCopies() + "\n";
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -27,11 +18,20 @@ public class Book extends  Product{
         this.author = author;
     }
 
+    public int getPages() {
+        return pages;
+    }
+
     public void setPages(int pages) {
         this.pages = pages;
     }
 
-    public int getPages() {
-        return pages;
+    @Override
+    public String getProductInfo() {
+        return "Book: " + getName() + "\n" +
+                "Written by: " + getAuthor() + "\n" +
+                "Pages: " + getPages() + "\n" +
+                "Price: " + getPrice() + "\n" +
+                "Available copies: " + getCopies() + "\n";
     }
 }

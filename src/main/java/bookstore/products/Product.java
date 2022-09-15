@@ -18,6 +18,36 @@ abstract public class Product implements Comparable<Product>{
         this.copies = copies;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price can't be negative");
+        }
+        this.price = price;
+    }
+
+    public int getCopies() {
+        return copies;
+    }
+
+    public void setCopies(int copies) {
+        if (copies < 0) {
+            throw new IllegalArgumentException("Copies can't be negative");
+        }
+        this.copies = copies;
+    }
+
     abstract public String getProductInfo();
 
     public void removeCopies(int copiesToRemove) {
@@ -47,35 +77,7 @@ abstract public class Product implements Comparable<Product>{
 
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        if (price < 0) {
-            throw new IllegalArgumentException("Price can't be negative");
-        }
-        this.price = price;
-    }
-
-    public int getCopies() {
-        return copies;
-    }
-
-    public void setCopies(int copies) {
-        if (copies < 0) {
-            throw new IllegalArgumentException("Price can't be negative");
-        }
-        this.copies = copies;
-    }
 
     @Override
     public int compareTo(Product product) {

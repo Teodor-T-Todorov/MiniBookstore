@@ -8,19 +8,19 @@ public class Album extends Product{
         this.artist = artist;
     }
 
-    @Override
-    public String getProductInfo() {
-        return "Album: " + getName() + "\n" +
-                "Written by: " + getArtist() + "\n" +
-                "Price: " + getPrice() + "\n" +
-                "Available copies: " + getCopies() + "\n";
+    public String getArtist() {
+        return artist;
     }
 
     public void setArtist(String artist) {
         this.artist = artist;
     }
 
-    public String getArtist() {
-        return artist;
+    @Override
+    public String getProductInfo() {
+        return "Album: " + getName() + "\n" +
+                "Written by: " + getArtist() + "\n" +
+                "Price: " + getPrice() + "\n" +
+                "Available copies: " + getCopies() + "\n";
     }
 }

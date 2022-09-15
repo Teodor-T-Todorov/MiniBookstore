@@ -8,19 +8,19 @@ public class Movie extends Product{
         this.director = director;
     }
 
-    @Override
-    public String getProductInfo() {
-        return "Movie: " + getName() + "\n" +
-                "Directed by: " + getDirector() + "\n" +
-                "Price: " + getPrice() + "\n" +
-                "Available copies: " + getCopies() + "\n";
+    public String getDirector() {
+        return director;
     }
 
     public void setDirector(String director) {
         this.director = director;
     }
 
-    public String getDirector() {
-        return director;
+    @Override
+    public String getProductInfo() {
+        return "Movie: " + getName() + "\n" +
+                "Directed by: " + getDirector() + "\n" +
+                "Price: " + getPrice() + "\n" +
+                "Available copies: " + getCopies() + "\n";
     }
 }
