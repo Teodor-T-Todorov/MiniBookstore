@@ -9,9 +9,10 @@ abstract public class Product implements Comparable<Product>{
     private int copies;
     private static final Logger log = LoggerFactory.getLogger(Product.class);
 
-    protected Product(String name, double price, int copies) {
+    protected Product(String name, double price, int copies) throws IllegalArgumentException {
         if (price < 0 || copies < 0) {
-            throw new IllegalArgumentException("Price or copies can't be negative");
+            final String exceptionMessage = "Price or copies can't be negative";
+            throw new IllegalArgumentException(exceptionMessage);
         }
         this.name = name;
         this.price = price;
@@ -30,9 +31,10 @@ abstract public class Product implements Comparable<Product>{
         return this.price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(double price) throws IllegalArgumentException{
         if (price < 0) {
-            throw new IllegalArgumentException("Price can't be negative");
+            final String exceptionMessage = "Price can't be negative";
+            throw new IllegalArgumentException(exceptionMessage);
         }
         this.price = price;
     }
@@ -43,16 +45,18 @@ abstract public class Product implements Comparable<Product>{
 
     public void setCopies(int copies) {
         if (copies < 0) {
-            throw new IllegalArgumentException("Copies can't be negative");
+            final String exceptionMessage = "Copies can't be negative";
+            throw new IllegalArgumentException(exceptionMessage);
         }
         this.copies = copies;
     }
 
     abstract public String getProductInfo();
 
-    public void removeCopies(int copiesToRemove) {
+    public void removeCopies(int copiesToRemove) throws IllegalArgumentException{
         if (copiesToRemove <= 0) {
-            throw new IllegalArgumentException("Can't remove negative or zero amount of copies");
+            final String exceptionMessage = "Can't remove negative or zero amount of copies";
+            throw new IllegalArgumentException(exceptionMessage);
         }
 
         if (copies >= copiesToRemove) {
@@ -60,24 +64,21 @@ abstract public class Product implements Comparable<Product>{
             log.info("Sold {} copies of {}", copiesToRemove, getName());
         } else {
             log.info("""
-                    Not enough copies in stock.\s
-                    Current copies {}\s
-                    Copies wanted to be sold {}""", copies,copiesToRemove);
+                Not enough copies in stock.\s
+                Current copies {}\s
+                Copies wanted to be sold {}""", copies,copiesToRemove);
         }
-
     }
 
-    public void getMoreCopies(int copiesToOrder) {
+    public void getMoreCopies(int copiesToOrder) throws IllegalArgumentException{
         if (copiesToOrder <= 0) {
-            throw new IllegalArgumentException("Can't get negative or zero amount of copies");
+            final String exceptionMessage = "Can't get negative or zero amount of copies";
+            throw new IllegalArgumentException(exceptionMessage);
         }
         copies += copiesToOrder;
         log.info("{} copies has been added for a total of {} for product: {}",
                 copiesToOrder, copies, getName());
-
     }
-
-
 
     @Override
     public int compareTo(Product product) {

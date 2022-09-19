@@ -69,9 +69,10 @@ public class Bookstore {
         }
     }
 
-    public void sellProduct(Product product, int copies) {
+    public void sellProduct(Product product, int copies) throws IllegalArgumentException {
         if (copies <= 0) {
-            throw new IllegalArgumentException("Can't sell negative or zero amount of copies");
+            final String exceptionMessage = "Can't sell negative or zero amount of copies";
+            throw new IllegalArgumentException(exceptionMessage);
         }
 
         if (products.contains(product)) {
@@ -82,9 +83,10 @@ public class Bookstore {
         }
     }
 
-    public void resupplyProduct(Product product, int copies) {
+    public void resupplyProduct(Product product, int copies) throws IllegalArgumentException {
         if (copies <= 0) {
-            throw new IllegalArgumentException("Can't resupply negative or zero amount of copies");
+            final String exceptionMessage = "Can't resupply negative or zero amount of copies";
+            throw new IllegalArgumentException(exceptionMessage);
         }
 
         if (products.contains(product)) {
@@ -110,9 +112,10 @@ public class Bookstore {
         }
     }
 
-    public void increasePrice(Product product, double price) {
+    public void increasePrice(Product product, double price) throws IllegalArgumentException {
         if (price <= 0) {
-            throw new IllegalArgumentException("Can't increase price with negative or zero value");
+            final String exceptionMessage = "Can't increase price with negative or zero value";
+            throw new IllegalArgumentException(exceptionMessage);
         }
 
         if (products.contains(product)) {
