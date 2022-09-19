@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BookTest {
-
     @Test
     public void classInitializationWithNegativePrice() {
         assertThrows(IllegalArgumentException.class,
@@ -33,42 +33,44 @@ class BookTest {
 
     @Test
     public void testGetMoreCopiesLogging() {
-        Logger logger = (Logger) LoggerFactory.getLogger(Product.class);
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
-
+        LogCaptor logCaptor = LogCaptor.forClass(Product.class);
         Product book = new Book("LOTR", 10, 5, "Tolkien", 1000);
-        book.getMoreCopies(2);
+        int copiesToOrder = 2;
 
-        List<ILoggingEvent> logsList = listAppender.list;
+        book.getMoreCopies(copiesToOrder);
 
-        assertEquals("2 copies has been added for a total of 7 for product: LOTR", logsList.get(0).getFormattedMessage());
-        assertEquals(Level.INFO, logsList.get(0).getLevel());
+        final String expectedLogMessage =
+                String.format("%d copies has been added for a total of %d for product: %s",
+                        copiesToOrder, book.getCopies(), book.getName());
 
-        listAppender.stop();
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));
     }
 
     @Test
-    public void testRemoveCopiesLogging() {
-        Logger logger = (Logger) LoggerFactory.getLogger(Product.class);
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
-
+    public void testRemovingLessThanTotalCopiesLogging() {
+        LogCaptor logCaptor = LogCaptor.forClass(Product.class);
         Product book = new Book("LOTR", 10, 5, "Tolkien", 1000);
-        book.removeCopies(2);
-        book.removeCopies(4);
 
-        List<ILoggingEvent> logsList = listAppender.list;
+        int copiesToRemove = 2;
+        String expectedLogMessage = String.format("Sold %d copies of %s", copiesToRemove, book.getName());
+        book.removeCopies(copiesToRemove);
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));
+    }
 
-        assertEquals("Sold 2 copies of LOTR", logsList.get(0).getFormattedMessage());
-        assertEquals("""
+    @Test
+    public void testRemovingMoreThanTotalCopiesLogging() {
+        LogCaptor logCaptor = LogCaptor.forClass(Product.class);
+        Product book = new Book("LOTR", 10, 5, "Tolkien", 1000);
+
+        int copiesToRemove = 6;
+        final String expectedLogMessage = String.format("""
                     Not enough copies in stock.\s
-                    Current copies 3\s
-                    Copies wanted to be sold 4""", logsList.get(1).getFormattedMessage());
+                    Current copies %d\s
+                    Copies wanted to be sold %d""",
+                book.getCopies(), copiesToRemove);
 
-        listAppender.stop();
+        book.removeCopies(copiesToRemove);
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));;
     }
 
     @Test

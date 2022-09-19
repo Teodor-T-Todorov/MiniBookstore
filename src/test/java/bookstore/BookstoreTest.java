@@ -4,12 +4,11 @@ import bookstore.products.Album;
 import bookstore.products.Book;
 import bookstore.products.Movie;
 import bookstore.products.Product;
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import nl.altindag.log.LogCaptor;
+import org.junit.jupiter.api.*;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -19,52 +18,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BookstoreTest {
     Product book = new Book("LOTR", 10, 5, "Tolkien", 1000);
-    Product movie = new Movie("Interstellar", 20, 10, "Christoper Nolan");
-    Product album = new Album("In Rainbows", 15, 20, "Radiohead");
     List<Product> productList = new ArrayList<>();
     Bookstore bookstore = new Bookstore("testStore", productList);
 
     @Test
-    public void addNewProductToBookstore() {
+    public void testAddNewProductToBookstore() {
         bookstore.addProductToStore(book);
         assertTrue(bookstore.contains(book));
     }
 
     @Test
     public void testLogWhenAddingNewProduct() {
-        Logger logger = (Logger) LoggerFactory.getLogger(Bookstore.class);
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
-
+        LogCaptor logCaptor = LogCaptor.forClass(Bookstore.class);
         bookstore.addProductToStore(book);
 
-        List<ILoggingEvent> logsList = listAppender.list;
+        final String expectedLogMessage =
+                String.format("%d copies of [%s, %s] got added to the bookstore",
+                book.getCopies(), book.getName(), book.getClass().getSimpleName());
 
-        assertEquals("5 copies of [LOTR, Book] got added to the bookstore", logsList.get(0).getFormattedMessage());
-
-        listAppender.stop();
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));
     }
 
     @Test
     public void testLogWhenAddingExistingProduct() {
-        Logger logger = (Logger) LoggerFactory.getLogger(Bookstore.class);
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
+        LogCaptor logCaptor = LogCaptor.forClass(Bookstore.class);
 
         bookstore.addProductToStore(book);
         bookstore.addProductToStore(book);
 
-        List<ILoggingEvent> logsList = listAppender.list;
+        final String expectedLogMessage =
+                String.format("[%s, %s] is already available in the store",
+                book.getName(), book.getClass().getSimpleName());
 
-        assertEquals("[LOTR, Book] is already available in the store", logsList.get(1).getFormattedMessage());
-
-        listAppender.stop();
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));
     }
 
     @Test
-    public void removeProductFromBookstore() {
+    public void testRemoveProductFromBookstore() {
         bookstore.addProductToStore(book);
         bookstore.removeProductFromStore(book);
         assertFalse(bookstore.contains(book));
@@ -72,46 +62,40 @@ class BookstoreTest {
 
     @Test
     public void testLogWhenRemovingExistingProduct() {
-        Logger logger = (Logger) LoggerFactory.getLogger(Bookstore.class);
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
+        LogCaptor logCaptor = LogCaptor.forClass(Bookstore.class);
 
         bookstore.addProductToStore(book);
         bookstore.removeProductFromStore(book);
 
-        List<ILoggingEvent> logsList = listAppender.list;
+        final String expectedLogMessage =
+                String.format("[%s, %s] got removed to the bookstore",
+                        book.getName(), book.getClass().getSimpleName());
 
-        assertEquals("[LOTR, Book] got removed to the bookstore", logsList.get(1).getFormattedMessage());
-
-        listAppender.stop();
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));
     }
 
     @Test
     public void testLogWhenRemovingNonexistentProduct() {
-        Logger logger = (Logger) LoggerFactory.getLogger(Bookstore.class);
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
+        LogCaptor logCaptor = LogCaptor.forClass(Bookstore.class);
 
         bookstore.removeProductFromStore(book);
 
-        List<ILoggingEvent> logsList = listAppender.list;
+        final String expectedLogMessage =
+                String.format("Can't remove, [%s, %s] is not included in the store",
+                        book.getName(), book.getClass().getSimpleName());
 
-        assertEquals("Can't remove, [LOTR, Book] is not included in the store", logsList.get(0).getFormattedMessage());
-
-        listAppender.stop();
+        assertTrue(logCaptor.getInfoLogs().contains(expectedLogMessage));
     }
 
     @Test
-    public void sellingLessCopiesThanTotalAmount() {
+    public void testSellingLessCopiesThanTotalAmount() {
         bookstore.addProductToStore(book);
         bookstore.sellProduct(book, 3);
         assertEquals(2, book.getCopies());
     }
 
     @Test
-    public void sellingNegativeAmountOfCopies() {
+    public void testSellingNegativeAmountOfCopies() {
         bookstore.addProductToStore(book);
         assertThrows(IllegalArgumentException.class,
                 () -> {
@@ -120,14 +104,14 @@ class BookstoreTest {
     }
 
     @Test
-    public void resupplyingCopiesOfProduct() {
+    public void testResupplyingCopiesOfProduct() {
         bookstore.addProductToStore(book);
         bookstore.resupplyProduct(book, 5);
         assertEquals(10, book.getCopies());
     }
 
     @Test
-    public void resupplyingNegativeAmountOfCopies() {
+    public void testResupplyingNegativeAmountOfCopies() {
         bookstore.addProductToStore(book);
         assertThrows(IllegalArgumentException.class,
                 () -> {
